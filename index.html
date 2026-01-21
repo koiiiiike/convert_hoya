@@ -11,13 +11,17 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
+            min-height: 100svh;
             margin: 0;
             background-color: #ffffff;
             color: #333;
         }
 
         .container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+            box-sizing: border-box;
             text-align: center;
         }
 
@@ -26,15 +30,22 @@
             margin-bottom: 20px;
         }
 
+        .input-area {
+            display: flex;
+            gap: 8px;
+        }
+
         input[type="text"] {
-            padding: 8px;
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
             border: 1px solid #ccc;
-            width: 200px;
             outline: none;
         }
 
         button {
-            padding: 8px 15px;
+            padding: 10px 14px;
+            font-size: 16px;
             cursor: pointer;
             background: #eee;
             border: 1px solid #ccc;
@@ -48,6 +59,11 @@
             margin-top: 30px;
             font-size: 1.5rem;
             min-height: 1.5em;
+            word-break: break-all;
+        }
+
+        .actions {
+            margin-top: 15px;
         }
 
         @media (max-width: 480px) {
@@ -66,14 +82,16 @@
 
     <div class="container">
         <h1>ほや変換くん</h1>
-        <div>
+
+        <div class="input-area">
             <input type="text" id="inputText" placeholder="言葉を入力">
             <button onclick="convert()">変換</button>
         </div>
+
         <div id="result"></div>
 
         <div class="actions">
-            <button onclick="tweet()">Tweetする</button>
+            <button onclick="tweet()">Xに投稿</button>
         </div>
     </div>
 
@@ -99,26 +117,19 @@
             const lastChar = baseText.slice(-1);
             let suffix = "";
 
-            // 母音判定用（簡易版）
             const isODan = /[おこそとのほもよろをオコソトノホモヨロヲ]/.test(lastChar);
             const isUDan = /[うくすつぬふむゆるウクスツヌフムユル]/.test(lastChar);
 
             if (isODan) {
-                // 1. o段：ほや or ぽよ
                 suffix = Math.random() < 0.5 ? "ほや" : "ぽよ";
             } else if (isUDan) {
-                // 2. u段：にす
                 suffix = "にす";
             } else {
-                // 3. それ以外：ランダム
                 const list = ["ほや", "ぽよ", "にす"];
                 suffix = list[Math.floor(Math.random() * list.length)];
             }
 
-            // 変換ルールに合わせて最後を調整
-            // 基本的に最後の1文字を削ってから接尾辞をつける形にする
             let output = baseText.replace(/.$/, "") + suffix;
-
             resultArea.innerText = output;
         }
 
@@ -126,7 +137,8 @@
             const result = document.getElementById('result').innerText;
             if (!result) return;
 
-            const text = encodeURIComponent(result + "\n #ほや変換くん\nhttps://koiiiiike.github.io/convert_hoya/");
+            // ハッシュタグの前に半角スペースを追加し、URLとの間を整えます
+            const text = encodeURIComponent(result + " #ほや変換くん\nhttps://koiiiiike.github.io/convert_hoya/");
             const url = `https://twitter.com/intent/tweet?text=${text}`;
             window.open(url, "_blank");
         }
