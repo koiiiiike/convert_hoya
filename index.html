@@ -91,7 +91,7 @@
         <div id="result"></div>
 
         <div class="actions">
-            <button onclick="tweet()">Xに投稿</button>
+            <button onclick="tweet()">tweetする</button>
         </div>
     </div>
 
@@ -137,7 +137,6 @@
             const result = document.getElementById('result').innerText;
             if (!result) return;
 
-            // ハッシュタグの前に半角スペースを追加し、URLとの間を整えます
             const text = encodeURIComponent(result + " #ほや変換くん\nhttps://koiiiiike.github.io/convert_hoya/");
             const url = `https://twitter.com/intent/tweet?text=${text}`;
             window.open(url, "_blank");
