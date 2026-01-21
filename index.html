@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ほや変換くん</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffffff;
+            color: #333;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+        }
+
+        input[type="text"] {
+            padding: 8px;
+            border: 1px solid #ccc;
+            width: 200px;
+            outline: none;
+        }
+
+        button {
+            padding: 8px 15px;
+            cursor: pointer;
+            background: #eee;
+            border: 1px solid #ccc;
+        }
+
+        button:hover {
+            background: #e0e0e0;
+        }
+
+        #result {
+            margin-top: 30px;
+            font-size: 1.5rem;
+            min-height: 1.5em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1>ほや変換くん</h1>
+        <div>
+            <input type="text" id="inputText" placeholder="言葉を入力">
+            <button onclick="convert()">変換</button>
+        </div>
+        <div id="result"></div>
+    </div>
+
+    <script>
+        function convert() {
+            const input = document.getElementById('inputText').value.trim();
+            const resultArea = document.getElementById('result');
+
+            if (!input) {
+                resultArea.innerText = "";
+                return;
+            }
+
+            let baseText = input;
+
+            // 先頭と末尾以外が対象。3文字以上の場合のみ実行。
+            if (input.length >= 3 && Math.random() < 0.3) {
+                const index = Math.floor(Math.random() * (input.length - 2)) + 1;
+                baseText = input.substring(0, index) + input[index] + input.substring(index);
+            }
+
+            // 最後の一文字を取得して母音を判定
+            const lastChar = baseText.slice(-1);
+            let suffix = "";
+
+            // 母音判定用（簡易版）
+            const isODan = /[おこそとのほもよろをオコソトノホモヨロヲ]/.test(lastChar);
+            const isUDan = /[うくすつぬふむゆるウクスツヌフムユル]/.test(lastChar);
+
+            if (isODan) {
+                // 1. o段：ほや or ぽよ
+                suffix = Math.random() < 0.5 ? "ほや" : "ぽよ";
+            } else if (isUDan) {
+                // 2. u段：にす
+                suffix = "にす";
+            } else {
+                // 3. それ以外：ランダム
+                const list = ["ほや", "ぽよ", "にす"];
+                suffix = list[Math.floor(Math.random() * list.length)];
+            }
+
+            // 変換ルールに合わせて最後を調整
+            // 基本的に最後の1文字を削ってから接尾辞をつける形にする
+            let output = baseText.replace(/.$/, "") + suffix;
+
+            resultArea.innerText = output;
+        }
+
+        document.getElementById('inputText').addEventListener('keypress', function (e) {
+            if (e.key === 'Enter') {
+                convert();
+            }
+        });
+    </script>
+
+</body>
+
+</html>
