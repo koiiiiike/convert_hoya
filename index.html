@@ -49,6 +49,16 @@
             font-size: 1.5rem;
             min-height: 1.5em;
         }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            #result {
+                font-size: 1.3rem;
+            }
+        }
     </style>
 </head>
 
@@ -61,6 +71,10 @@
             <button onclick="convert()">変換</button>
         </div>
         <div id="result"></div>
+
+        <div class="actions">
+            <button onclick="tweet()">Tweetする</button>
+        </div>
     </div>
 
     <script>
@@ -106,6 +120,15 @@
             let output = baseText.replace(/.$/, "") + suffix;
 
             resultArea.innerText = output;
+        }
+
+        function tweet() {
+            const result = document.getElementById('result').innerText;
+            if (!result) return;
+
+            const text = encodeURIComponent(result + "\n #ほや変換くん\nhttps://koiiiiike.github.io/convert_hoya/");
+            const url = `https://twitter.com/intent/tweet?text=${text}`;
+            window.open(url, "_blank");
         }
 
         document.getElementById('inputText').addEventListener('keypress', function (e) {
